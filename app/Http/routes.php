@@ -109,20 +109,27 @@ $app->post('client/server', function () use ($uriClient) {
     return $server
         ->setReturnResponse(true)
         ->setClass(\App\Soap\ClientsSoapController::class)
+//        ->setObject()
         ->handle();
 });
 
-$app->get('soap-client', function () use ($uriClient) {
+$app->get('soap-add-client', function () use ($uriClient) {
     $client = new \Zend\Soap\Client("$uriClient/son-soap.wsdl", [
         'cache_wsdl' => WSDL_CACHE_NONE
     ]);
-//    print_r($client->listAll());
+
     print_r($client->create([
-        'name' => 'Cesar Devesa',
+        'name' => 'Cesar Devesa B-333',
         'email' => 'cesar.devesa@cesar-soap.dev',
-        'phone' => '8555585',
+        'phone' => '8555585'
     ]));
 
+});
+$app->get('soap-clients', function () use ($uriClient) {
+    $client = new \Zend\Soap\Client("$uriClient/son-soap.wsdl", [
+        'cache_wsdl' => WSDL_CACHE_NONE
+    ]);
+    print_r($client->listAll());
 });
 
 /**

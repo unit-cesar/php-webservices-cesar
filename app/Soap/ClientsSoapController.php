@@ -5,8 +5,10 @@ namespace App\Soap;
 use App\Client;
 use App\Types\ClientType;
 use Illuminate\Contracts\Support\Arrayable;
+use phpDocumentor\Reflection\Types\Object_;
 use Zend\Config\Config;
 use Zend\Config\Writer\Xml;
+use Zend\Stdlib\ArrayObject;
 
 //use Illuminate\Database\Eloquent\ModelNotFoundException;
 //use Illuminate\Http\Request;
@@ -29,19 +31,19 @@ class ClientsSoapController
         return son_response()->make($client);
     }*/
 
-    /**
-     * @param \App\Types\ClientType $type
-     * @return string
-     */
-    public function create(ClientType $type)
+//    /**
+//     * @param \App\Types\ClientType $type
+//     * @return string
+//     */
+
+    protected function getXML($data)
     {
-        $data = [
-          'name' => $type->name,
-          'email' => $type->email,
-          'phone' => $type->phone,
-        ];
-        $client = Client::create($data);
-        return $this->getXML($client);
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        }
+        $config = new Config(['result' => $data], true);
+        $xmlWriter = new Xml();
+        return $xmlWriter->toString($config);
     }
 
     /*public function update(Request $request,$id)
@@ -70,13 +72,55 @@ class ClientsSoapController
         return son_response()->make("",204);
     }*/
 
-    protected function getXML($data)
+
+
+
+    ///**
+    // *
+    // * @param array $params Array containing the necessary params.
+    // *    $params = [
+    // *      'hostname'     => (string) DB hostname. Required.
+    // *      'databaseName' => (string) DB name. Required.
+    // *      'username'     => (string) DB username. Required.
+    // *      'password'     => (string) DB password. Required.
+    // *      'port'         => (int) DB port. Default: 1433.
+    // *      'sublevel'     => [
+    // *          'key' => (\stdClass) Value description.
+    // *      ]
+    // *    ]
+    // */
+
+
+
+
+
+//* @param array $type Array containing the necessary params.
+//*    $type = [
+//*      'name'        => (string) DB name. Required.
+//*      'email'       => (string) DB email. Required.
+//*      'phone'       => (string) DB phone. Required.
+//*    ]
+
+
+    /**
+     *
+     * @param  \App\Types\ClientType $type
+     *
+     * @return string
+     *
+     */
+    public function create($type)
     {
-        if($data instanceof Arrayable){
-            $data = $data->toArray();
-        }
-        $config = new Config(['result' => $data],true);
-        $xmlWriter = new Xml();
-        return $xmlWriter->toString($config);
+        $data = new ClientType;
+        $data->name  = $type->name;
+        $data->email = $type->email;
+        $data->phone = $type->phone;
+
+//        return  serialize($type);
+//        return  $type->name;
+//        return  gettype($type);
+
+        $client = Client::create((array)$data);
+        return $this->getXML($client);
     }
 }

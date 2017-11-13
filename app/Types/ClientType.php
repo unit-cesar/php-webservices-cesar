@@ -16,4 +16,8 @@ class ClientType
      * @var string
      */
     public $phone;
+
+
 }
+
+
