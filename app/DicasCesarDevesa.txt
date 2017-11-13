@@ -1,0 +1,47 @@
+//////////////////////////////////////////////////////////////////
+///////////// PHP Web Services //////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+// Editar .env
+APP_KEY={chave com 32 caracteres}
+DB_CONNECTION=sqlite
+
+// Cria arquivo SQLite
+touch database\database.sqlite
+
+// Inicia servidor
+php -S localhost:8000 -t public public/index.php
+
+// Habilitar SQLite e Soap em php.ini  >php --ini
+extension=php_pdo_sqlite.dll
+extension=php_soap.dll
+
+// Dados iniciais
+php artisan migrate
+php artisan db:seed
+
+//////////////////////////////// APACHE SOAP ////////////////
+// Apache (VirtualHost):
+
+<VirtualHost *:80>
+    ServerName cesar-soap.dev
+    DocumentRoot "C:/.../public"
+    <Directory "C:/.../public">
+        ##Allow from all
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+// Windows (.host):
+127.0.0.1 cesar-soap.dev
+
+// Lumen (routes.php):
+$uri = 'http://cesar-soap.dev';
+
+// Browser (Link):
+http://cesar-soap.dev/son-soap.wsdl
+
+
+>>>>>>>>>>>>> Fazer GIT
