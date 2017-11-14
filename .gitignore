@@ -1,6 +1,5 @@
 vendor/**
 .env
-/.idea
+
+# git rm -r .idea
 .idea/
-.idea/*
-.idea/**
