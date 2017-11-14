@@ -1,5 +1,5 @@
 /.idea
+.idea
 /vendor
 .env
-composer.lock
 database/database.sqlite

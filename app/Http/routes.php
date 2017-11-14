@@ -11,6 +11,8 @@
 |
 */
 
+use App\Types\ClientType;
+
 $app->get('/', function () use ($app) {
     return $app->version();
 });
@@ -60,8 +62,8 @@ $app->get('tcu', function () {
 
 });
 
-$uri = 'http://cesar-soap.dev';
-// $uri = 'http://localhost:8080';
+$uri = 'http://son-soap.dev';
+// $uri = 'http://localhost:8000';
 // $uri = 'http://127.0.0.1:8080';
 $app->get('son-soap.wsdl', function () use ($uri) {
     $autoDiscover = new \Zend\Soap\AutoDiscover();
@@ -113,16 +115,22 @@ $app->post('client/server', function () use ($uriClient) {
         ->handle();
 });
 
-$app->get('soap-add-client', function () use ($uriClient) {
+$app->get('soap-client', function () use ($uriClient) {
     $client = new \Zend\Soap\Client("$uriClient/son-soap.wsdl", [
         'cache_wsdl' => WSDL_CACHE_NONE
     ]);
 
-    print_r($client->create([
-        'name' => 'Cesar Devesa B-333',
-        'email' => 'cesar.devesa@cesar-soap.dev',
-        'phone' => '8555585'
-    ]));
+    /*print_r($client->create([
+        'name' => 'Luiz Carlos',
+        'email' => 'luizcarlos@schoolofnet.com',
+        'phone' => '5555'
+    ]));*/
+
+    $dataTeste = new ClientType();
+    $dataTeste->name = 'Luiz Carlos';
+    $dataTeste->email = 'luizcarlos@schoolofnet.com';
+    $dataTeste->phone = '5555';
+    print_r($client->create($dataTeste));
 
 });
 $app->get('soap-clients', function () use ($uriClient) {
