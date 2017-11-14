@@ -133,6 +133,7 @@ $app->get('soap-client', function () use ($uriClient) {
     print_r($client->create($dataTeste));
 
 });
+
 $app->get('soap-clients', function () use ($uriClient) {
     $client = new \Zend\Soap\Client("$uriClient/son-soap.wsdl", [
         'cache_wsdl' => WSDL_CACHE_NONE
