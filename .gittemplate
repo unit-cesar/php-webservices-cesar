@@ -10,5 +10,11 @@ Write always in english
 
 Description 5
 
+Command direct:
+git commit -a --file .gittemplate
+
+Command edit in Vi:
+git commit -a -t .gittemplate
+
 _
 Same links
