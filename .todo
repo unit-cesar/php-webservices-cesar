@@ -1,1 +1,93 @@
 TODO See this info and if everything is ok delete this line or delete this file
+
+//////////////////////////////////////////////////////////////////
+///////////// PHP Web Services //////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+// Editar .env
+APP_KEY={chave com 32 caracteres}
+DB_CONNECTION=sqlite
+#DB_HOST=localhost
+#DB_PORT=3306
+#DB_DATABASE=homestead
+#DB_USERNAME=homestead
+#DB_PASSWORD=secret
+
+// Cria arquivo SQLite
+touch database\database.sqlite
+
+// Inicia servidor
+php -S localhost:8000 -t public public/index.php
+
+// Habilitar SQLite e Soap em php.ini
+>>>> php --ini
+>>>> return  phpversion();
+
+extension=php_pdo_sqlite.dll
+extension=php_soap.dll
+
+// Dados iniciais
+php artisan migrate
+php artisan db:seed
+
+//////////////////////////////// APACHE SOAP ////////////////
+// Apache (VirtualHost):
+
+##Webserver - Fornece
+<VirtualHost *:80>
+    ServerName son-soap.dev
+    DocumentRoot "C:/.../public"
+    <Directory "C:/.../public">
+        ##Allow from all
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+##API - Consome
+<VirtualHost *:80>
+    ServerName cesar-soap.dev
+    DocumentRoot "C:/.../public"
+    <Directory "C:/.../public">
+        ##Allow from all
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+
+// Windows (.host):
+127.0.0.1 son-soap.dev
+127.0.0.1 cesar-soap.dev
+
+// Lumen (routes.php):
+$uri = 'http://son-soap.dev';
+
+// Browser (Link):
+http://son-soap.dev/son-soap.wsdl
+http://cesar-soap.dev/son-soap.wsdl
+
+
+///////////////////////// Reparo na função create() - SOAP ///////////////
+ /**
+     *
+     * @param  \App\Types\ClientType $type
+     *
+     * @return string
+     *
+     */
+    public function create($type)
+    {
+        $data = new ClientType;
+        $data->name  = $type->name;
+        $data->email = $type->email;
+        $data->phone = $type->phone;
+
+//        return  serialize($type);
+//        return  $type->name;
+//        return  gettype($type);
+
+        $client = Client::create((array)$data);
+        return $this->getXML($client);
+    }
